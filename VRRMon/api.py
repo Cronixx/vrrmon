@@ -1,7 +1,8 @@
-import configparser
+# import configparser
 import json
 import requests
 from VRRMon import callResult
+from VRRMon import formatter
 
 
 class Api(object):
@@ -12,45 +13,37 @@ class Api(object):
 
         def __init__(self, config_file):
             config = configparser.RawConfigParser()
-            onfig.read(config_file)
+            config.read(config_file)
         
     '''
 
     BASE_URI = ["https://vrrf.finalrewind.org/", "CITYARG", "/", "STATIONARG", ".json?frontend=json"]
 
-    def __init__(self):
-        self.resp_json = []
-        self.call_results = []
+    def __init__(self,
+                 api_id,
+                 city="Dortmund",
+                 station="Wickede S"):
 
-    def fetch(self, city="Dortmund", station="Wickede S"):
-        url = requests.get(self.build_url(city, station))
-        response = json.loads(url.content.decode())
-        self.resp_json.append(response)
-        self.call_results.append(callResult.CallResult(response))
+        self.current_callResult = None          # Last fetched response as api_object
+        self.call_results = []                  # Holds all trains returned from call
+        self.city = city                        # Last fetched response as api_object
+        self.station = station                  # Last fetched response as api_object
+        self.api_id = api_id                    # ID to identify api object
+        self.f = formatter.Formatter()          # Formatter object can handle callresults really nice
+        self.call_url = "https://vrrf.finalrewind.org/{}/{}.json?frontend=json".format(self.city, self.station)
 
-    def get_json_str(self, sort=True):
-        if self.resp_json is None:
-            return None
-        if type(self.resp_json) is str:
-            return self.resp_json
-        else:
-            return str(json.dumps(self.resp_json, sort_keys=sort))
+    def fetch(self):
+        url = requests.get(self.call_url)
+        response = json.loads(url.content.decode('utf-8'))
+        self.current_callResult = callResult.CallResult(response)
+        self.call_results.append(self.current_callResult)
+        self.print_result()
 
-    def print_json(self, sort=True, indents=4):
-        if self.resp_json is None:
-            return None
-        if type(self.resp_json) is str:
-            print(json.dumps(json.loads(self.resp_json), sort_keys=sort, indent=indents))
-        else:
-            print(json.dumps(self.resp_json, sort_keys=sort, indent=indents))
-        return None
+    def current_callresult(self):
+        return self.current_callResult
 
-    def get_resp_json(self, index=-1):
-        return self.resp_json[index]
+    def all_callresults(self):
+        return self.call_results
 
-    def get_resp_data(self, index=-1):
-        return self.resp_data[index]
-
-    @staticmethod
-    def build_url(city, station):
-        return Api.BASE_URI[0] + city + Api.BASE_URI[2] + station + Api.BASE_URI[4]
+    def print_result(self, index=-1):
+        self.f.print_result(self.call_results[index])
