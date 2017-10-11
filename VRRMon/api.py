@@ -25,9 +25,9 @@ class Api(object):
                  station="Wickede S"):
 
         self.current_callResult = None          # Last fetched response as api_object
-        self.call_results = []                  # Holds all trains returned from call
-        self.city = city                        # Last fetched response as api_object
-        self.station = station                  # Last fetched response as api_object
+        self.call_results = []                  # List of all call_results TODO: Shouldnt become bigger than 14
+        self.city = city                        #  
+        self.station = station                  # 
         self.api_id = api_id                    # ID to identify api object
         self.f = formatter.Formatter()          # Formatter object can handle callresults really nice
         self.call_url = "https://vrrf.finalrewind.org/{}/{}.json?frontend=json".format(self.city, self.station)
