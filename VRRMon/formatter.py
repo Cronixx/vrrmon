@@ -1,6 +1,12 @@
 import pprint
+import configparser
 
 '''     
+TODO:       ~ Neue Modi hinzufügen 
+            ~ Generisches Dateninterface zur späteren Weiterverarbeitung
+            ~ Spezielle Interfaces für die Templates
+
+
 Sample api response
                 "preformatted": [],     # List consists of multiple List with l[0]=Line l[1]=Destination l[2]=countdown
                 "countdown": "",        # "2",
@@ -48,7 +54,7 @@ class Formatter(object):
         if result_object is None:
             return
         detail = result_object.get_detail(self.keylist)
-        return detail
+        return detail.values()
 
     def print_result(self, result_object):
         if result_object is None:

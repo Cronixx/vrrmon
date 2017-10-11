@@ -1,5 +1,9 @@
 from math import floor
 '''
+TODO:   ~ train index can be parametrized 
+        ~ methods for preformatted
+
+
 Sample api response:
 
 {

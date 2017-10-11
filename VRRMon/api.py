@@ -1,4 +1,4 @@
-# import configparser
+import configparser
 import json
 import requests
 from VRRMon import callResult
@@ -7,14 +7,9 @@ from VRRMon import formatter
 
 class Api(object):
     '''
-    Api Object
-
-    TODO: Constructor with Config File
-
-        def __init__(self, config_file):
-            config = configparser.RawConfigParser()
-            config.read(config_file)
-        
+    TODO:       ~ configparser legt fest was für ein Formatter erstellt wird?
+                    https://docs.python.org/3/library/configparser.html
+                ~ YAGNI
     '''
 
     BASE_URI = ["https://vrrf.finalrewind.org/", "CITYARG", "/", "STATIONARG", ".json?frontend=json"]
@@ -39,6 +34,9 @@ class Api(object):
         self.call_results.append(self.current_callResult)
         self.print_result()
 
+    def display(self):
+        return str(self.f.get_result(self.current_callResult))
+
     def current_callresult(self):
         return self.current_callResult
 
@@ -47,3 +45,7 @@ class Api(object):
 
     def print_result(self, index=-1):
         self.f.print_result(self.call_results[index])
+
+    def set_new_formatter(self, new_f):
+        if new_f.__class__ is formatter:
+            self.f = new_f
