@@ -15,16 +15,16 @@ class Api(object):
     BASE_URI = ["https://vrrf.finalrewind.org/", "CITYARG", "/", "STATIONARG", ".json?frontend=json"]
 
     def __init__(self, city="Dortmund", station="Wickede S"):
-        self.current_callResult = None              # Last fetched response as api_object
-        self.call_results = []                      # List of all call_results TODO: Shouldnt become bigger than 14
-
         error = city is "" or city is None or station is "" or station is None
         if error:
             raise ValueError("Illegal Arguments")
-        self.city = city                        #
-        self.station = station                  #
 
-        self.f = formatter.Formatter("default") # Formatter object can handle callresults really nicely
+        self.current_callResult = None              # Last fetched response as api_object
+        self.call_results = []                      # List of all call_results TODO: Shouldnt become bigger than 14
+        self.city = city                            #
+        self.station = station                      #
+
+        self.f = formatter.Formatter("default")     # Formatter object can handle callresults really nicely
         self.call_url = "https://vrrf.finalrewind.org/{}/{}.json?frontend=json".format(self.city, self.station)
 
     def fetch(self):

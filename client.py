@@ -13,12 +13,14 @@ class Client(object):
     def __init__(self):
         self.args = sys.argv[1:]
         self.request = []
-        if len(self.args) == 2:
-            self.request = [self.args[0], self.args[1]]
-        if len(self.args) == 3:
-            self.addr = self.args[2]
-        else:
-            self.addr = "localhost"
+
+        if len(self.args) != 3:
+            print("Usage:   client.py <server> <city> <station>")
+            sys.exit(1)
+
+        self.addr = self.args[0]
+        self.request = [self.args[1], self.args[2]]
+
         self.ctx = zmq.Context()
         self.s = self.ctx.socket(zmq.REQ)
 

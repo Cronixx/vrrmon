@@ -49,22 +49,23 @@ Sample api response:
 class CallResult(object):
 
     def __init__(self, json):
-        self.raw_data = json['raw']
-        if len(self.raw_data) < 1:
+        if len(json) < 1:
             raise ValueError("Unknown City/Station.")
+
+        self.raw_data = json['raw']
         self.preformatted_data = json['preformatted']
-        self.train_index = len(json['raw'])-1
-        self.current_index = 0
+        self.train_index = len(self.raw_data)
 
     def get_raw_data(self, index=0):
         return self.raw_data[index]
 
     def get_detail(self, keylist=None):
-        output = {}
+        output = []
         if keylist is None:
             keylist = self.get_keys()
-        for key in keylist:
-            output[key] = self.raw_data[self.current_index][key]
+        for curr in range(self.train_index):
+            for key in keylist:
+                output[curr][key] = self.raw_data[curr][key]
         return output
 
     def get_keys(self):
