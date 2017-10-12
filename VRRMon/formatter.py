@@ -54,7 +54,7 @@ class Formatter(object):
         if result_object is None:
             return
         detail = result_object.get_detail(self.keylist)
-        return detail.values()
+        return detail
 
     def print_result(self, result_object):
         if result_object is None:

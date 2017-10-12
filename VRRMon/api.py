@@ -14,17 +14,17 @@ class Api(object):
 
     BASE_URI = ["https://vrrf.finalrewind.org/", "CITYARG", "/", "STATIONARG", ".json?frontend=json"]
 
-    def __init__(self,
-                 api_id,
-                 city="Dortmund",
-                 station="Wickede S"):
+    def __init__(self, city="Dortmund", station="Wickede S"):
+        self.current_callResult = None              # Last fetched response as api_object
+        self.call_results = []                      # List of all call_results TODO: Shouldnt become bigger than 14
 
-        self.current_callResult = None          # Last fetched response as api_object
-        self.call_results = []                  # List of all call_results TODO: Shouldnt become bigger than 14
-        self.city = city                        #  
-        self.station = station                  # 
-        self.api_id = api_id                    # ID to identify api object
-        self.f = formatter.Formatter()          # Formatter object can handle callresults really nice
+        error = city is "" or city is None or station is "" or station is None
+        if error:
+            raise ValueError("Illegal Arguments")
+        self.city = city                        #
+        self.station = station                  #
+
+        self.f = formatter.Formatter("default") # Formatter object can handle callresults really nicely
         self.call_url = "https://vrrf.finalrewind.org/{}/{}.json?frontend=json".format(self.city, self.station)
 
     def fetch(self):
@@ -32,10 +32,10 @@ class Api(object):
         response = json.loads(url.content.decode('utf-8'))
         self.current_callResult = callResult.CallResult(response)
         self.call_results.append(self.current_callResult)
-        self.print_result()
+        # self.print_result()
 
     def display(self):
-        return str(self.f.get_result(self.current_callResult))
+        return self.f.get_result(self.current_callResult)
 
     def current_callresult(self):
         return self.current_callResult

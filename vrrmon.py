@@ -1,5 +1,6 @@
 import configparser
-from flask import Flask
+import zmq
+import time
 from VRRMon import api
 
 '''
@@ -19,23 +20,39 @@ TODO:       ~ Frontend --> Template bei google
             ~ 
 '''
 
+
+ctx = zmq.Context()
+socket = ctx.socket(zmq.REP)
+socket.bind("tcp://*:5555")
 config = configparser.ConfigParser()
-config.read('./conf/conf.ini')
-print(config.sections())
-print(config.items())
-print(config.values())
 
-app = Flask(__name__)
-
-api_container = [api.Api(0)]
-api_container[0].fetch()
-
-
-@app.route('/')
-def index():
-    return api_container[0].display()
+# config.read('.\\conf\\conf.ini')
+# print(config.sections())
+# print(config.items())
+# print(config)
 
 
 if __name__ == '__main__':
-   app.run()
+    while True:
+        try:
+            # check for a message, this will not block
+            requested = socket.recv_pyobj(flags=zmq.NOBLOCK)
+            print("Received request: %s" % requested)
+            #  Create new Api for request
+            if len(requested) != 2:
+                raise ValueError("")
+            api_object = api.Api(requested[0], requested[1])
+            api_object.fetch()
+            socket.send_pyobj(api_object.display())
+        except ValueError as v:
+            socket.send_pyobj(v)
+        except zmq.Again as e:
+            # No messages waiting to be processed
+            print("No Client")
+            pass
+        #  Do some 'work'
+        time.sleep(1)
+
+
+
 

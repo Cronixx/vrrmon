@@ -1,4 +1,4 @@
-from math import floor
+# from math import floor
 '''
 TODO:   ~ train index can be parametrized 
         ~ methods for preformatted
@@ -50,9 +50,11 @@ class CallResult(object):
 
     def __init__(self, json):
         self.raw_data = json['raw']
+        if len(self.raw_data) < 1:
+            raise ValueError("Unknown City/Station.")
         self.preformatted_data = json['preformatted']
         self.train_index = len(json['raw'])-1
-        self.current_index = self.train_index-floor(self.train_index/2)
+        self.current_index = 0
 
     def get_raw_data(self, index=0):
         return self.raw_data[index]
