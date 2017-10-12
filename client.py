@@ -12,7 +12,7 @@ class Client(object):
 
     def __init__(self):
         self.args = sys.argv[1:]
-        self.request = ["Dortmund", "Kampstraße"]
+        self.request = []
         if len(self.args) == 2:
             self.request = [self.args[0], self.args[1]]
         if len(self.args) == 3:

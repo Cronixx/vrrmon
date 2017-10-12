@@ -26,10 +26,10 @@ socket = ctx.socket(zmq.REP)
 socket.bind("tcp://*:5555")
 config = configparser.ConfigParser()
 
-# config.read('.\\conf\\conf.ini')
-# print(config.sections())
-# print(config.items())
-# print(config)
+config.read('conf/conf.ini')
+print(config.sections())
+print(config.items())
+print(config)
 
 
 if __name__ == '__main__':
@@ -40,8 +40,9 @@ if __name__ == '__main__':
             print("Received request: %s" % requested)
             #  Create new Api for request
             if len(requested) != 2:
-                raise ValueError("")
-            api_object = api.Api(requested[0], requested[1])
+                api_object = api.Api(config['Previous']['city'], config['Previous']['station'])
+            else:
+                api_object = api.Api(requested[0], requested[1])
             api_object.fetch()
             socket.send_pyobj(api_object.display())
         except ValueError as v:
