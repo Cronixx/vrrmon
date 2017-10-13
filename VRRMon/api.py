@@ -29,7 +29,7 @@ class Api(object):
 
     def fetch(self):
         url = requests.get(self.call_url)
-        response = json.loads(url.content.decode('utf-8'))
+        response = json.loads(url.content.decode('iso-8859-1'))
         self.current_callResult = callResult.CallResult(response)
         self.call_results.append(self.current_callResult)
         # self.print_result()

@@ -33,7 +33,8 @@ class Client(object):
 
         #  Get the reply.
         message = self.s.recv_pyobj()
-        print("Received reply [ %s ]" % message)
+        for train in message:
+            print("Received reply  %s " % train)
 
 
 c = Client()

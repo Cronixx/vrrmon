@@ -54,7 +54,7 @@ class CallResult(object):
 
         self.raw_data = json['raw']
         self.preformatted_data = json['preformatted']
-        self.train_index = len(self.raw_data)
+        self.train_count = len(self.raw_data)
 
     def get_raw_data(self, index=0):
         return self.raw_data[index]
@@ -63,10 +63,11 @@ class CallResult(object):
         output = []
         if keylist is None:
             keylist = self.get_keys()
-        for curr in range(self.train_index):
+        for curr in range(self.train_count):
+            output.append({})
             for key in keylist:
                 output[curr][key] = self.raw_data[curr][key]
         return output
 
     def get_keys(self):
-        return self.raw_data[self.current_index].keys()
+        return self.raw_data[0].keys()
